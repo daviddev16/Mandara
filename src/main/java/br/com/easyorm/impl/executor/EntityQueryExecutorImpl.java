@@ -25,8 +25,7 @@ public class EntityQueryExecutorImpl implements IEntityQueryExecutor {
     
     private final IDialect dialect;
     
-    public EntityQueryExecutorImpl(EntityManager entityManager, Connection connection, IDialect dialect) 
-    {
+    public EntityQueryExecutorImpl(EntityManager entityManager, Connection connection, IDialect dialect) {
         Checks.stateNotNull(entityManager,    "EntityQueryExecutorImpl#entityManager");
         Checks.stateNotNull(connection,       "EntityQueryExecutorImpl#connection");
         Checks.stateNotNull(dialect,          "EntityQueryExecutorImpl#dialect");
@@ -43,8 +42,7 @@ public class EntityQueryExecutorImpl implements IEntityQueryExecutor {
 
     @Override
     public <T> IDQLQuery<T> executeSelectQuery(String sqlQuery, Class<? super T> entityClassType) 
-            throws SQLException 
-    {
+            throws SQLException {
         return queryProcessorDelegator.delegateSelectQuery(
                 this,
                 entityManager.getMetadataOf(entityClassType), 
@@ -55,8 +53,7 @@ public class EntityQueryExecutorImpl implements IEntityQueryExecutor {
     @Override
     public <T> IDQLQuery<T> executeSelectQuery(String sqlQuery, 
             Class<? super T> entityClassType, IEntityDeserializer deserializer) 
-            throws SQLException 
-    {
+            throws SQLException {
         return queryProcessorDelegator.delegateSelectQuery(
                 this,
                 entityManager.getMetadataOf(entityClassType), 
@@ -66,8 +63,7 @@ public class EntityQueryExecutorImpl implements IEntityQueryExecutor {
     
     @Override
     public <T> IDQLQuery<T> executePreparedSelectQuery(String sqlQuery, Class<? super T> entityClassType) 
-            throws SQLException 
-    {
+            throws SQLException {
         return queryProcessorDelegator.delegateSelectQuery(
                 this,
                 entityManager.getMetadataOf(entityClassType), 
@@ -78,8 +74,7 @@ public class EntityQueryExecutorImpl implements IEntityQueryExecutor {
     @Override
     public <T> IDQLQuery<T> executePreparedSelectQuery(String sqlQuery, 
             Class<? super T> entityClassType, IEntityDeserializer deserializer) 
-            throws SQLException 
-    {
+            throws SQLException {
         return queryProcessorDelegator.delegateSelectQuery(
                 this,
                 entityManager.getMetadataOf(entityClassType), 
@@ -93,8 +88,8 @@ public class EntityQueryExecutorImpl implements IEntityQueryExecutor {
     }
 
     @Override
-    public <T> IDMLQuery<T> executeInsertQuery(T entityObject) throws SQLException 
-    {
+    public <T> IDMLQuery<T> executeInsertQuery(T entityObject) throws SQLException {
+        
         EntityMetadata entityMetadata = 
                 entityManager.getMetadataOf(entityObject.getClass());
         

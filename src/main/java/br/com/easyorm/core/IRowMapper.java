@@ -21,17 +21,14 @@ public interface IRowMapper<T> extends IEntityDeserializer {
     @Override
     default T deserialize(
             QueryProcessContext queryProcessContext, 
-            int rowCount, 
-            EntityMetadata entityMetadata) 
-                    throws DeserializationException, EntityCreationException 
-    {
+            int rowCount, EntityMetadata entityMetadata) 
+                    throws DeserializationException, EntityCreationException {
         try {
             return map(queryProcessContext.getResultSet(), rowCount);
         } catch (SQLException e) {
             throw new DeserializationException("Failed to map a row to entity." , e);
         }
     }
-    
     
     @Override
     default void clearQueryCaching(UUID queryId) {/* do nothing */}

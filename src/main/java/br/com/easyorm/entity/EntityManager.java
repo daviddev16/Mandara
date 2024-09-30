@@ -13,32 +13,28 @@ public final class EntityManager {
     
     private final Map<Class<?>, EntityMetadata> entityMetadataMapping;
     
-    private EntityManager() 
-    {
+    private EntityManager() {
         entityMetadataMapping = new HashMap<Class<?>, EntityMetadata>();
     }
     
-    public EntityMetadata register(Class<?> entityClassType)
-    {
+    public EntityMetadata register(Class<?> entityClassType) {
         return createOrGetMetadataImpl(entityClassType, true);
     }
     
-    public EntityMetadata getMetadataOf(Class<?> entityClassType)
-    {
+    public EntityMetadata getMetadataOf(Class<?> entityClassType) {
         return createOrGetMetadataImpl(entityClassType, false);
     }
     
-    private EntityMetadata createOrGetMetadataImpl(Class<?> entityClassType, boolean throwIfExists)
-    {
+    private EntityMetadata createOrGetMetadataImpl(
+            Class<?> entityClassType, boolean throwIfExists) {
+        
         EntityMetadata entityMetadata = entityMetadataMapping.get(entityClassType);
         
         if (throwIfExists && entityMetadata != null)
             throw alreadyRegisteredStateException(entityClassType);
             
-        if (entityMetadata == null) 
-        {
-            synchronized (EntityManager.class) 
-            {
+        if (entityMetadata == null) {
+            synchronized (EntityManager.class) {
                 entityMetadata = new EntityMetadata(entityClassType);
                 entityMetadataMapping.put(entityClassType, entityMetadata);                
             }
@@ -47,25 +43,20 @@ public final class EntityManager {
         return entityMetadata;
     }
     
-    public <T> T newInstanceOf(Class<?> entityClassType) throws EntityCreationException
-    {
+    public <T> T newInstanceOf(Class<?> entityClassType) throws EntityCreationException {
         return entityMetadataMapping.get(entityClassType).newInstance();
     }
     
-    public boolean isReady() 
-    {
+    public boolean isReady() {
         return entityMetadataMapping != null;
     }
     
-    public static EntityManager getInstance()
-    {
+    public static EntityManager getInstance() {
         return (INSTANCE != null) ? INSTANCE : (createSynchronizedSingleton());
     }
     
-    private static EntityManager createSynchronizedSingleton() 
-    {
-        synchronized (EntityManager.class) 
-        {
+    private static EntityManager createSynchronizedSingleton() {
+        synchronized (EntityManager.class) {
             return (INSTANCE = new EntityManager());
         }
     }

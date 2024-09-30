@@ -1,6 +1,5 @@
 package br.com.easyorm.impl.processor;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,20 +34,18 @@ public class SelectQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
             EntityMetadata entityMetadata, 
             IEntityDeserializer deserializer, 
             StatementType statementType,
-            String sqlQuery) throws SQLException 
-    {
+            String sqlQuery) throws SQLException {
+        
         super(entityQueryExecutor, entityMetadata, sqlQuery, statementType);
         
-        this.deserializer = deserializer;
-        
-        final Connection connection = entityQueryExecutor.getConnection();
+        statementWrapper = StatementWrapperFactory
+                .get(entityQueryExecutor.getConnection(), sqlQuery, statementType);
 
-        statementWrapper = StatementWrapperFactory.get(connection, sqlQuery, statementType);
+        this.deserializer = deserializer;
     }
     
     @Override
-    public void processQuery() throws QueryProcessorException 
-    {
+    public void processQuery() throws QueryProcessorException {
         Collection<T> fetchedDataSet = new ArrayList<T>();
         QueryProcessContext queryProcessContext = null;
         
@@ -64,10 +61,12 @@ public class SelectQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
                 fetchedDataSet.add(deserializeSingleInternal(
                         rowCount++, entityMetadata, queryProcessContext));
         
-            if (!isCancelled())
-            {
+            if (!isCancelled()) {
                 dataSet = fetchedDataSet;
                 setQueryState(QueryState.DONE);
+            } else {
+                dataSet = Collections.EMPTY_LIST;
+                fetchedDataSet.clear();
             }
             
         } catch (Exception ex) {
@@ -82,16 +81,10 @@ public class SelectQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
                 deserializer.clearQueryCaching(queryProcessContext.getQueryId());
         }
         
-        if (isCancelled())
-        {
-            dataSet = Collections.EMPTY_LIST;
-            fetchedDataSet.clear();
-        }
     }
     
     @Override
-    public Collection<T> getDataSet() throws QueryProcessorException 
-    {
+    public Collection<T> getDataSet() throws QueryProcessorException {
         if (dataSet == null) 
             processQuery();
 
@@ -104,17 +97,14 @@ public class SelectQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
     }
 
     private T deserializeSingleInternal(
-            int rowCount, 
-            EntityMetadata entityMetadata, 
+            int rowCount, EntityMetadata entityMetadata, 
             QueryProcessContext queryResultContext) 
-                    throws DeserializationException, EntityCreationException
-    {
+                    throws DeserializationException, EntityCreationException {
         return (T) deserializer.deserialize(queryResultContext, rowCount, entityMetadata);
     }
     
     private QueryProcessContext createQueryResultContext(ResultSet resultSet) 
-            throws SQLException
-    {
+            throws SQLException {
         return new QueryProcessContext(resultSet, getQueryProcessId());
     }
 

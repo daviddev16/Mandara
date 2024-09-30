@@ -15,7 +15,7 @@ import java.util.Map;
 import br.com.easyorm.core.IStatementWrapper;
 import br.com.easyorm.util.Utilities;
 
-public class PreparedStatementWrapperImpl implements IStatementWrapper  {
+final class PreparedStatementWrapperImpl implements IStatementWrapper  {
 
     private final PreparedStatement statement;
 
@@ -149,44 +149,37 @@ public class PreparedStatementWrapperImpl implements IStatementWrapper  {
     }
     
     @Override
-    public void setParameterObject(int index, Object value) throws SQLException 
-    {
+    public void setParameterObject(int index, Object value) throws SQLException {
         statement.setObject(index, value);
     }
 
     @Override
-    public void setParameterString(int index, String value) throws SQLException 
-    {
+    public void setParameterString(int index, String value) throws SQLException {
         statement.setString(index, value);
     }
 
     @Override
-    public void setParameterInt(int index, int value) throws SQLException 
-    {
+    public void setParameterInt(int index, int value) throws SQLException {
         statement.setInt(index, value);
     }
 
     @Override
-    public void setParameterLong(int index, long value) throws SQLException 
-    {
+    public void setParameterLong(int index, long value) throws SQLException {
         statement.setLong(index, value);   
     }
 
     @Override
-    public void setParameterTimestamp(int index, Timestamp value) throws SQLException 
-    {
+    public void setParameterTimestamp(int index, Timestamp value) throws SQLException {
         statement.setTimestamp(index, value);
     }
 
     @Override
-    public void setParameterDate(int index, Date value) throws SQLException 
-    {
+    public void setParameterDate(int index, Date value) throws SQLException {
         statement.setDate(index, value);    
     }
 
     @Override
-    public void setParameterDate(int index, Date value, Calendar cal) throws SQLException 
-    {
+    public void setParameterDate(int index, Date value, Calendar cal) throws SQLException {
         statement.setDate(index, value, cal);
     }
 
@@ -205,14 +198,12 @@ public class PreparedStatementWrapperImpl implements IStatementWrapper  {
 
 
     @Override
-    public void closeQuietly() 
-    {
+    public void closeQuietly() {
         Utilities.closeQuietly(statement);
     }
 
     @Override
-    public void executeStatement() throws SQLException 
-    {
+    public void executeStatement() throws SQLException {
         statement.executeUpdate();
     }
 

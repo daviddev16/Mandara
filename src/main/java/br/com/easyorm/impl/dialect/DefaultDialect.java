@@ -10,8 +10,9 @@ import br.com.easyorm.entity.EntityMetadata;
 public abstract class DefaultDialect implements IDialect {
 
     @Override
-    public String generateInsertSQL(EntityMetadata entityMetadata, String schema, Collection<EntityField> entityFields) 
-    {
+    public String generateInsertSQL(EntityMetadata entityMetadata, 
+            String schema, Collection<EntityField> entityFields) {
+        
         StringBuilder sql = new StringBuilder();
         
         sql.append("INSERT INTO ");

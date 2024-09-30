@@ -12,14 +12,13 @@ public final class GlobalQueryListener implements QueryListener {
     
     private final List<QueryListener> queryListeners;
     
-    public GlobalQueryListener() 
-    {
+    public GlobalQueryListener() {
         this.queryListeners = new ArrayList<QueryListener>();
         this.queryListeners.add(this);
     }
     
-    public void fireOnChangedStateEvent(QueryState oldState, QueryState newState, IQueryProcessor<?> queryProcessor)
-    {
+    public void fireOnChangedStateEvent(QueryState oldState, 
+            QueryState newState, IQueryProcessor<?> queryProcessor) {
         for (QueryListener queryListener : queryListeners)
             queryListener.onQueryChangedState(oldState, newState, queryProcessor);
     }
@@ -30,8 +29,7 @@ public final class GlobalQueryListener implements QueryListener {
     }
 
     @Override
-    public void onQueryChangedState(QueryState oldState, QueryState newState, IQueryProcessor<?> queryProcessor) 
-    {
+    public void onQueryChangedState(QueryState oldState, QueryState newState, IQueryProcessor<?> queryProcessor) {
         System.out.println();
         System.out.println("QueryID: " + queryProcessor.getQueryProcessId());
         System.out.println("Changing States for query: " + queryProcessor.getSQLQuery());

@@ -11,122 +11,102 @@ import java.util.Calendar;
 import br.com.easyorm.core.IStatementWrapper;
 import br.com.easyorm.util.Utilities;
 
-public class StatementWrapperImpl implements IStatementWrapper {
+class StatementWrapperImpl implements IStatementWrapper {
 
     private final String sqlQuery;
     private final Statement statement;
     
-    public StatementWrapperImpl(Connection connection, String sqlQuery) 
-            throws SQLException 
-    {
+    public StatementWrapperImpl(Connection connection, String sqlQuery) throws SQLException {
         this.statement = connection.createStatement();
         this.sqlQuery = sqlQuery;
     }
     
     @Override
-    public void setParameterObject(String name, Object value) throws SQLException 
-    {
+    public void setParameterObject(String name, Object value) throws SQLException {
         settingParamaterUnsupportedException();
     }
 
     @Override
-    public void setParameterObject(int index, Object value) throws SQLException 
-    {
+    public void setParameterObject(int index, Object value) throws SQLException {
         settingParamaterUnsupportedException();
     }
 
     @Override
-    public void setParameterString(String name, String value) throws SQLException 
-    {
+    public void setParameterString(String name, String value) throws SQLException {
         settingParamaterUnsupportedException();        
     }
 
     @Override
-    public void setParameterString(int index, String value) throws SQLException 
-    {
+    public void setParameterString(int index, String value) throws SQLException {
         settingParamaterUnsupportedException();    
     }
 
     @Override
-    public void setParameterInt(String name, int value) throws SQLException 
-    {
+    public void setParameterInt(String name, int value) throws SQLException {
         settingParamaterUnsupportedException();    
     }
 
     @Override
-    public void setParameterInt(int index, int value) throws SQLException 
-    {
+    public void setParameterInt(int index, int value) throws SQLException {
         settingParamaterUnsupportedException();
     }
 
     @Override
-    public void setParameterLong(String name, long value) throws SQLException 
-    {
+    public void setParameterLong(String name, long value) throws SQLException {
         settingParamaterUnsupportedException();    
     }
 
     @Override
-    public void setParameterLong(int index, long value) throws SQLException 
-    {
+    public void setParameterLong(int index, long value) throws SQLException {
         settingParamaterUnsupportedException();        
     }
 
     @Override
-    public void setParameterTimestamp(String name, Timestamp value) throws SQLException 
-    {
+    public void setParameterTimestamp(String name, Timestamp value) throws SQLException {
         settingParamaterUnsupportedException();
     }
 
     @Override
-    public void setParameterTimestamp(int index, Timestamp value) throws SQLException 
-    {
+    public void setParameterTimestamp(int index, Timestamp value) throws SQLException {
         settingParamaterUnsupportedException();
     }
 
     @Override
-    public void setParameterDate(String name, Date value) throws SQLException 
-    {
+    public void setParameterDate(String name, Date value) throws SQLException {
         settingParamaterUnsupportedException();    
     }
 
     @Override
-    public void setParameterDate(int index, Date value) throws SQLException 
-    {
+    public void setParameterDate(int index, Date value) throws SQLException {
         settingParamaterUnsupportedException();    
     }
 
     @Override
-    public void setParameterDate(String name, Date value, Calendar cal) throws SQLException 
-    {
+    public void setParameterDate(String name, Date value, Calendar cal) throws SQLException {
         settingParamaterUnsupportedException();    
     }
 
     @Override
-    public void setParameterDate(int index, Date value, Calendar cal) throws SQLException 
-    {
+    public void setParameterDate(int index, Date value, Calendar cal) throws SQLException {
         settingParamaterUnsupportedException();
     }
     
-    private void settingParamaterUnsupportedException()
-    {
+    private void settingParamaterUnsupportedException() {
         throw new UnsupportedOperationException("Setting parameters are not allowed in non-prepared statements.");
     }
     
     @Override
-    public void executeStatement() throws SQLException 
-    {
+    public void executeStatement() throws SQLException {
         statement.executeUpdate(sqlQuery);
     }
     
     @Override
-    public ResultSet executeQuery() throws SQLException 
-    {
+    public ResultSet executeQuery() throws SQLException {
         return statement.executeQuery(sqlQuery);
     }
     
     @Override
-    public void closeQuietly() 
-    {
+    public void closeQuietly() {
         Utilities.closeQuietly(statement);
     }
 

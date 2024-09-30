@@ -29,8 +29,8 @@ public class InsertQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
             IEntityQueryExecutor entityQueryExecutor,
             EntityMetadata entityMetadata, 
             StatementType statementType,
-            Object entityObject) throws SQLException 
-    {
+            Object entityObject) throws SQLException {
+        
         super(entityQueryExecutor, entityMetadata, statementType);
         
         this.entityObject = entityObject;
@@ -50,22 +50,17 @@ public class InsertQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
         statementWrapper = StatementWrapperFactory.get(connection, generatedSQL, statementType);        
     }
     
-    private void cacheFieldIndexes()
-    {
+    private void cacheFieldIndexes() {
         int j = 1;
-        for (int i = 0; i < entityMetadata.getShortcutCaching().getEntityFields().length; i++)
-        {
+        for (int i = 0; i < entityMetadata.getShortcutCaching().getEntityFields().length; i++) {
             EntityField entityField = entityMetadata.getShortcutCaching().getEntityFields()[i];
-            
             if (shouldSkipField(entityField)) 
                 continue;
-
             fieldIndexes.put(entityField, j++);
         }
     }
     
-    private boolean shouldSkipField(EntityField entityField)
-    {
+    private boolean shouldSkipField(EntityField entityField) {
         return (entityField instanceof PkEntityField) && 
                 (((PkEntityField)entityField).getStrategy() == Strategy.AUTO);
     }
@@ -81,10 +76,8 @@ public class InsertQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
     }
     
     @Override
-    public void processQuery() throws QueryProcessorException 
-    {
-        for (Map.Entry<EntityField, Integer> fieldEntry : fieldIndexes.entrySet())
-        {
+    public void processQuery() throws QueryProcessorException {
+        for (Map.Entry<EntityField, Integer> fieldEntry : fieldIndexes.entrySet()){
             try {
                 Object entityFieldValue = fieldEntry.getKey().getWrapperedField().get(entityObject);
                 ((IParameterized)statementWrapper).setParameterObject(fieldEntry.getValue(), entityFieldValue);
@@ -92,7 +85,6 @@ public class InsertQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
                 e.printStackTrace();
             }
         }
-        
         try {
             statementWrapper.executeStatement();
         } catch (SQLException e) {

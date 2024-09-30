@@ -10,13 +10,11 @@ public class EntityField {
     private final Field wrapperedField;
     private final EntityFieldType fieldType;
     
-    public EntityField(Field field, String fieldName) 
-    {
+    public EntityField(Field field, String fieldName) {
         this(field, EntityFieldType.NONE, fieldName);
     }
     
-    public EntityField(Field field, EntityFieldType fieldType, String fieldName) 
-    {
+    public EntityField(Field field, EntityFieldType fieldType, String fieldName) {
         Checks.state((field == null), 
                 "EntityField#field must not be null.");
         
@@ -33,8 +31,7 @@ public class EntityField {
         changeFieldAccessibility(field);
     }
     
-    private void changeFieldAccessibility(Field field)
-    {
+    private void changeFieldAccessibility(Field field) {
         field.setAccessible(true);
     }
 

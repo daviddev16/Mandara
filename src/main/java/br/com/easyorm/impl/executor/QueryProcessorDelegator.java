@@ -20,8 +20,8 @@ final class QueryProcessorDelegator {
             EntityMetadata entityMetadata, 
             StatementType statementType,
             String sqlQuery, 
-            IEntityDeserializer deserializer) throws SQLException 
-    {
+            IEntityDeserializer deserializer) throws SQLException {
+        
         return new SelectQueryProcessorImpl<T>(
                 entityQueryExecutor, entityMetadata, deserializer, 
                 statementType, sqlQuery);
@@ -31,8 +31,8 @@ final class QueryProcessorDelegator {
             IEntityQueryExecutor entityQueryExecutor,
             EntityMetadata entityMetadata, 
             StatementType statementType,
-            Object entityObject) throws SQLException 
-    {
+            Object entityObject) throws SQLException {
+        
         return new InsertQueryProcessorImpl<T>(
                 entityQueryExecutor, entityMetadata, statementType, entityObject);
     }

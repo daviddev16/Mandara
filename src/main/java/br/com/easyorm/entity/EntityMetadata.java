@@ -37,8 +37,7 @@ public final class EntityMetadata {
     private final Map<String, EntityField> entityFieldMapping;
     private final EntityMetadataShortcutCaching entityMetadataShortcutCaching;
     
-    public EntityMetadata(Class<?> entityClassType) 
-    {
+    public EntityMetadata(Class<?> entityClassType) {
         Checks.state((entityClassType == null), 
                 "EntityMetadata#entityClassType must not be null.");
         
@@ -71,16 +70,15 @@ public final class EntityMetadata {
         generateContiguousEntityFieldsCache();
     }
 
-    private void extractEntityFields(Class<?> extractableClassType)
-    {
+    private void extractEntityFields(Class<?> extractableClassType){
         extractEntityFields(extractableClassType, true, EntityFieldType.NONE);
     }
     
     private void extractEntityFields(Class<?> extractableClassType, 
-            boolean rootEntityClassType, EntityFieldType rootEntityFieldType)
-    {
-        for (Field field : extractableClassType.getDeclaredFields())  
-        {
+            boolean rootEntityClassType, EntityFieldType rootEntityFieldType) {
+        
+        for (Field field : extractableClassType.getDeclaredFields()){
+
             final EntityFieldType fieldType = (rootEntityClassType) 
                     ? EntityFieldType.NONE 
                     : rootEntityFieldType;
@@ -90,8 +88,8 @@ public final class EntityMetadata {
     }
     
     private void extractField(Field field, 
-            boolean rootScan, EntityFieldType rootEntityFieldType)
-    {
+            boolean rootScan, EntityFieldType rootEntityFieldType) {
+
         final Class<?> fieldClassType   = field.getType();
         final Column   columnAnnotation = field.getDeclaredAnnotation(Column.class);
         final Id       idAnnotation     = field.getDeclaredAnnotation(Id.class);
@@ -107,20 +105,17 @@ public final class EntityMetadata {
         // Se a PK não foi definida nesse Field, apenas registar como um field
         // de tipo EntityFieldType.NONE ou herdar do rootEntityFieldType.
         
-        if (!isAnnotatedWithId)
-        {
+        if (!isAnnotatedWithId) {
             EntityFieldType subFieldType = (rootEntityFieldType != null) 
                     ? rootEntityFieldType 
                     : EntityFieldType.NONE;
             
-            if (subFieldType == EntityFieldType.NONE)
-            {
+            if (subFieldType == EntityFieldType.NONE) {
                 registerEntityField(new EntityField(
                         field, 
                         subFieldType,
                         definedColumnName));
-            } else 
-            {
+            } else {
                 registerEntityField(new PkEntityField(
                         field, 
                         subFieldType,
@@ -133,8 +128,7 @@ public final class EntityMetadata {
         
         // PK composta definida
         
-        if (fieldClassType.isAnnotationPresent(Compound.class))
-        {
+        if (fieldClassType.isAnnotationPresent(Compound.class)) {
             extractEntityFields(fieldClassType, false, EntityFieldType.COMPOUND);
             return;
         }
@@ -151,8 +145,7 @@ public final class EntityMetadata {
                 idAnnotation.strategy()));
     }
     
-    private void generateContiguousEntityFieldsCache()
-    {   
+    private void generateContiguousEntityFieldsCache() {   
         final Collection<EntityField> entityFields = 
                 entityFieldMapping.values();
         
@@ -161,8 +154,7 @@ public final class EntityMetadata {
         
         List<EntityField> primaryKeysList = new ArrayList<EntityField>();
 
-        for (EntityField entityField : entityFieldMapping.values())
-        {
+        for (EntityField entityField : entityFieldMapping.values()) {
             if (entityField.isPrimaryKey())
                 primaryKeysList.add(entityField);
         }
@@ -171,17 +163,14 @@ public final class EntityMetadata {
                 primaryKeysList.toArray(new EntityField[primaryKeysList.size()]));
     }
     
-    private void validateEntityFields()
-    {
+    private void validateEntityFields() {
         if (entityFieldMapping.isEmpty())
             throw noFieldDefinedStateException(entityClassType);
 
         boolean hasPrimaryKey = false;
         
-        for (EntityField entityField : entityFieldMapping.values())
-        {
-            if (entityField.isPrimaryKey())
-            {
+        for (EntityField entityField : entityFieldMapping.values()) {
+            if (entityField.isPrimaryKey()) {
                 hasPrimaryKey = true;
                 break;
             }
@@ -192,20 +181,17 @@ public final class EntityMetadata {
     }
     
     @SuppressWarnings("unchecked")
-    public <T> T newInstance() throws EntityCreationException
-    {
+    public <T> T newInstance() throws EntityCreationException {
         return (T) newInstanceInternal();
     }
     
-    private Object newInstanceInternal() throws EntityCreationException 
-    {
+    private Object newInstanceInternal() throws EntityCreationException {
         try {
             return getDefaultConstructor().newInstance(EMPTY_ARGS);
         } catch (InstantiationException   | 
                  IllegalAccessException   | 
                  IllegalArgumentException | 
-                 InvocationTargetException e) 
-        {
+                 InvocationTargetException e) {
             throw new EntityCreationException("Failed to create a"
                     + " new instance of " + entityClassType.getName(), e);
         }
@@ -227,8 +213,7 @@ public final class EntityMetadata {
                 : tableName;
     }
      
-    private Constructor<?> extractDefaultConstructor()
-    {
+    private Constructor<?> extractDefaultConstructor() {
         return Utilities.extractDefaultConstrutor(entityClassType);
     }
 

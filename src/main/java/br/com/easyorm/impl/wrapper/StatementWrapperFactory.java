@@ -8,9 +8,9 @@ import br.com.easyorm.core.StatementType;
 
 public final class StatementWrapperFactory {
 
-    public static IStatementWrapper get(Connection connection, String sqlQuery, StatementType statementType) 
-            throws SQLException
-    {
+    public static IStatementWrapper get(Connection connection, 
+            String sqlQuery, StatementType statementType) throws SQLException {
+        
         if (statementType == StatementType.NONE) 
             return new StatementWrapperImpl(connection, sqlQuery);
         

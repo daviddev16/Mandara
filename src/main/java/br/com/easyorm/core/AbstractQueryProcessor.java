@@ -27,8 +27,8 @@ public abstract class AbstractQueryProcessor<T> implements IQueryProcessor<T> {
     public AbstractQueryProcessor(
             IEntityQueryExecutor entityQueryExecutor,
             EntityMetadata entityMetadata,
-            StatementType statementType) 
-    {
+            StatementType statementType) {
+        
         this(entityQueryExecutor, entityMetadata, EMPTY_SQL, statementType);
     }
     
@@ -36,8 +36,8 @@ public abstract class AbstractQueryProcessor<T> implements IQueryProcessor<T> {
             IEntityQueryExecutor entityQueryExecutor,
             EntityMetadata entityMetadata,
             String sqlQuery, 
-            StatementType statementType) 
-    {
+            StatementType statementType) {
+        
         this.entityQueryExecutor = entityQueryExecutor;
         
         this.entityMetadata   = entityMetadata;
@@ -50,27 +50,24 @@ public abstract class AbstractQueryProcessor<T> implements IQueryProcessor<T> {
         setQueryState(QueryState.PENDING);
     }
     
-    protected void updateSQLQuery(String newSqlQuery)
-    {
+    protected void updateSQLQuery(String newSqlQuery) {
         this.sqlQuery = newSqlQuery;
     }
     
-    protected synchronized void setQueryState(QueryState newQueryState)
-    {
+    protected synchronized void setQueryState(QueryState newQueryState) {
         QueryState oldState = queryState;
         queryState = newQueryState;
         if (isSpyable)
-            GlobalQueryListener.getInstance().fireOnChangedStateEvent(oldState, newQueryState, this);
+            GlobalQueryListener.getInstance()
+                .fireOnChangedStateEvent(oldState, newQueryState, this);
     }
     
     @Override
-    public void cancelQuery()
-    {
+    public void cancelQuery() {
         setQueryState(QueryState.CANCELLED);
     }
 
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return queryState == QueryState.CANCELLED;
     }
     

@@ -12,8 +12,8 @@ public final class PkEntityField extends EntityField {
             Field field, 
             EntityFieldType fieldType, 
             String fieldName, 
-            Strategy strategy) 
-    {
+            Strategy strategy) {
+        
         super(field, fieldType, fieldName);
         this.strategy = strategy;
     }
