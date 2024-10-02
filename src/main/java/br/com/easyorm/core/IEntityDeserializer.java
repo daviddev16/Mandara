@@ -1,7 +1,5 @@
 package br.com.easyorm.core;
 
-import java.util.UUID;
-
 import br.com.easyorm.entity.EntityMetadata;
 import br.com.easyorm.exception.DeserializationException;
 import br.com.easyorm.exception.EntityCreationException;
@@ -13,7 +11,5 @@ public interface IEntityDeserializer {
             QueryProcessContext queryProcessContext, 
             int rowCount, 
             EntityMetadata entityMetadata) throws DeserializationException, EntityCreationException;
-    
-    void clearQueryCaching(UUID queryId);
     
 }

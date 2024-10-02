@@ -92,7 +92,7 @@ class StatementWrapperImpl implements IStatementWrapper {
     }
     
     private void settingParamaterUnsupportedException() {
-        throw new UnsupportedOperationException("Setting parameters are not allowed in non-prepared statements.");
+        throw new UnsupportedOperationException("Parameters are not allowed on non-prepared statements.");
     }
     
     @Override

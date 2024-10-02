@@ -1,8 +1,5 @@
 package br.com.easyorm.util;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-
 import br.com.easyorm.entity.EntityField;
 
 public final class Utilities {
@@ -32,40 +29,6 @@ public final class Utilities {
             if (!isStrFullyEmpty(string)) 
                 return string;
         return null;
-    }
-    
-    public static String fieldToString(Field field) {
-        return field.getType().getName() + "@" + field.getName();
-    }
-    
-    public static Constructor<?> extractDefaultConstrutor(Class<?> classType) {
-        Constructor<?> defaultConstructor = null;
-        
-        for (Constructor<?> constructor : classType.getDeclaredConstructors()) {
-            if (constructor.getParameterCount() == 0) {
-                defaultConstructor = constructor;
-                break;
-            }
-        }
-        
-        Checks.state((defaultConstructor == null), "Could not found a "
-                + "default constructor for " + classType.getName());
-        
-        return defaultConstructor;
-    }
-    
-    public static boolean isAllowedType(Class<?> type) {
-        return 
-            type.isPrimitive()      ||
-            type == Double.class    || 
-            type == Float.class     || 
-            type == Long.class      ||
-            type == Integer.class   || 
-            type == Short.class     || 
-            type == Character.class ||
-            type == Byte.class      || 
-            type == Boolean.class   || 
-            type == String.class;
     }
     
 }

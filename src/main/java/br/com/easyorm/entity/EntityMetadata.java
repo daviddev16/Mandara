@@ -19,8 +19,10 @@ import br.com.easyorm.annotation.Column;
 import br.com.easyorm.annotation.Compound;
 import br.com.easyorm.annotation.Entity;
 import br.com.easyorm.annotation.Id;
+import br.com.easyorm.core.Strategy;
 import br.com.easyorm.exception.EntityCreationException;
 import br.com.easyorm.util.Checks;
+import br.com.easyorm.util.Reflections;
 import br.com.easyorm.util.Utilities;
 
 public final class EntityMetadata {
@@ -28,14 +30,18 @@ public final class EntityMetadata {
     public static final Object[] EMPTY_ARGS = new Object[0];
 
     private final Class<?> entityClassType;
-    
-    private final Constructor<?> defaultConstructor;
+    private final Constructor<?> entityDefaultConstructor;
 
+    private Class<?> compoundKeyClassType;
+    private Constructor<?> compoundKeyDefaultConstructor;
+    
     private final String schemaName;
     private final String tableName;
     
     private final Map<String, EntityField> entityFieldMapping;
     private final EntityMetadataShortcutCaching entityMetadataShortcutCaching;
+    
+    private int fieldCount = 0;
     
     public EntityMetadata(Class<?> entityClassType) {
         Checks.state((entityClassType == null), 
@@ -49,7 +55,7 @@ public final class EntityMetadata {
         Checks.state((entityAnnotation == null), Entity.class.getName() + 
                 " is not present in " + entityClassType.getName());
         
-        this.defaultConstructor = extractDefaultConstructor();
+        this.entityDefaultConstructor = extractDefaultConstructor();
         
         this.entityFieldMapping = new HashMap<String, EntityField>();
         this.entityMetadataShortcutCaching = new EntityMetadataShortcutCaching();
@@ -60,14 +66,23 @@ public final class EntityMetadata {
                     entityAnnotation.tableName(), 
                     entityClassType.getSimpleName());
         
+        // Extrai todas as fields da entity
+        
         extractEntityFields(entityClassType);
         
         // Validar se existe fields definidas e pelo menos uma chave primária
+        
         validateEntityFields();
 
         // Gerar caching em arrays dos entityFields
         
         generateContiguousEntityFieldsCache();
+        
+        // Obtem construtor padrão da classe da primary key composta
+        
+        if (getCompoundKeyClassType() != null)
+            compoundKeyDefaultConstructor = 
+                Reflections.extractDefaultConstrutor(compoundKeyClassType);
     }
 
     private void extractEntityFields(Class<?> extractableClassType){
@@ -120,7 +135,7 @@ public final class EntityMetadata {
                         field, 
                         subFieldType,
                         definedColumnName,
-                        idAnnotation.strategy()));
+                        Strategy.NONE));
             }
             
             return;
@@ -129,11 +144,15 @@ public final class EntityMetadata {
         // PK composta definida
         
         if (fieldClassType.isAnnotationPresent(Compound.class)) {
+            compoundKeyClassType = fieldClassType;
+            
+            entityMetadataShortcutCaching.setCompoundKeyWrapperedField(field);
             extractEntityFields(fieldClassType, false, EntityFieldType.COMPOUND);
+            
             return;
         }
         
-        if (!Utilities.isAllowedType(fieldClassType))
+        if (!Reflections.isPrimitiveOrWrapperType(fieldClassType))
             throw unpermittedTypeStateException(field);
 
         // PK definida apenas com um primitivo
@@ -164,20 +183,17 @@ public final class EntityMetadata {
     }
     
     private void validateEntityFields() {
+        
         if (entityFieldMapping.isEmpty())
             throw noFieldDefinedStateException(entityClassType);
 
-        boolean hasPrimaryKey = false;
+        // Verificar se existe chave primária
         
-        for (EntityField entityField : entityFieldMapping.values()) {
-            if (entityField.isPrimaryKey()) {
-                hasPrimaryKey = true;
-                break;
-            }
-        }
-        
-        if (!hasPrimaryKey)
-            throw noPkDefinedStateException(entityClassType);
+        for (EntityField entityField : entityFieldMapping.values())
+            if (entityField.isPrimaryKey())
+                return;
+       
+        throw noPkDefinedStateException(entityClassType);
     }
     
     @SuppressWarnings("unchecked")
@@ -204,6 +220,7 @@ public final class EntityMetadata {
     }
     
     private EntityField registerEntityField(EntityField entityField) {
+        fieldCount++;
         return entityFieldMapping.put(entityField.getFieldName(), entityField);
     }
    
@@ -212,9 +229,17 @@ public final class EntityMetadata {
                 ? String.format("%s.%s", specifiedSchema, tableName) 
                 : tableName;
     }
-     
+    
+    public Class<?> getCompoundKeyClassType() {
+        return compoundKeyClassType;
+    }
+    
+    public Constructor<?> getCompoundKeyDefaultConstructor() {
+        return compoundKeyDefaultConstructor;
+    }
+    
     private Constructor<?> extractDefaultConstructor() {
-        return Utilities.extractDefaultConstrutor(entityClassType);
+        return Reflections.extractDefaultConstrutor(entityClassType);
     }
 
     public EntityMetadataShortcutCaching getShortcutCaching() {
@@ -226,7 +251,11 @@ public final class EntityMetadata {
     }
     
     public Constructor<?> getDefaultConstructor() {
-        return defaultConstructor;
+        return entityDefaultConstructor;
+    }
+    
+    public int getFieldCount() {
+        return fieldCount;
     }
     
     public Class<?> getEntityClassType() {

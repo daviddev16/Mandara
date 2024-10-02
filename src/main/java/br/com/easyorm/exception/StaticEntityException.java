@@ -1,10 +1,10 @@
 package br.com.easyorm.exception;
 
-import static br.com.easyorm.util.Utilities.fieldToString;
 
 import java.lang.reflect.Field;
 
 import br.com.easyorm.annotation.Id;
+import br.com.easyorm.util.Reflections;
 
 public final class StaticEntityException {
 
@@ -13,7 +13,7 @@ public final class StaticEntityException {
     }
     
     public static StateException unpermittedTypeStateException(Field field) {
-        return new StateException(fieldToString(field) + " uses a unpermitted type."); 
+        return new StateException(Reflections.fieldToString(field) + " uses a unpermitted type."); 
     }
     
     public static StateException noPkDefinedStateException(Class<?> entityClassType) {
@@ -25,7 +25,7 @@ public final class StaticEntityException {
     }
     
     public static StateException recursiveIdStateException(Field field) {
-        return new StateException(fieldToString(field) 
+        return new StateException(Reflections.fieldToString(field) 
                 + " should not be annotated with " + Id.class.getName()); 
     }
     

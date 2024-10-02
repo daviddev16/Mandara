@@ -2,7 +2,6 @@ package br.com.easyorm.core;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import br.com.easyorm.entity.EntityMetadata;
 import br.com.easyorm.exception.DeserializationException;
@@ -29,8 +28,5 @@ public interface IRowMapper<T> extends IEntityDeserializer {
             throw new DeserializationException("Failed to map a row to entity." , e);
         }
     }
-    
-    @Override
-    default void clearQueryCaching(UUID queryId) {/* do nothing */}
     
 }

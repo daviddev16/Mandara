@@ -20,7 +20,7 @@ public abstract class AbstractQueryProcessor<T> implements IQueryProcessor<T> {
     
     private volatile QueryState queryState;
     
-    private final boolean isSpyable = false;
+    private final boolean isSpyable = true;
     
     private final LocalTime queryStartTime;
     

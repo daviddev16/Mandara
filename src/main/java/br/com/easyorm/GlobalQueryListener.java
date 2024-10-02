@@ -30,12 +30,12 @@ public final class GlobalQueryListener implements QueryListener {
 
     @Override
     public void onQueryChangedState(QueryState oldState, QueryState newState, IQueryProcessor<?> queryProcessor) {
-        System.out.println();
-        System.out.println("QueryID: " + queryProcessor.getQueryProcessId());
-        System.out.println("Changing States for query: " + queryProcessor.getSQLQuery());
-        System.out.println("Old State: " + oldState + ", newState: " + newState);
-        System.out.println("Processor type: " + queryProcessor.getClass().getSimpleName());
-        System.out.println();
+        //System.out.println();
+        //System.out.println("QueryID: " + queryProcessor.getQueryProcessId());
+        System.out.println("Query State: " + newState + " / SQL: " + queryProcessor.getSQLQuery());
+        //System.out.println("Old State: " + oldState + ", newState: " + newState);
+        //System.out.println("Processor type: " + queryProcessor.getClass().getSimpleName());
+        //System.out.println();
         
     }
     

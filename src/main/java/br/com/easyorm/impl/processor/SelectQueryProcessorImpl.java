@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import br.com.easyorm.core.AbstractQueryProcessor;
+import br.com.easyorm.core.ICacheableEntityDeserializer;
 import br.com.easyorm.core.IEntityDeserializer;
 import br.com.easyorm.core.IEntityQueryExecutor;
 import br.com.easyorm.core.IParameterized;
@@ -76,9 +77,8 @@ public class SelectQueryProcessorImpl<T> extends AbstractQueryProcessor<T> imple
             
         } finally {
             statementWrapper.closeQuietly();
-
-            if (queryProcessContext != null)
-                deserializer.clearQueryCaching(queryProcessContext.getQueryId());
+            if ((queryProcessContext != null) && (deserializer instanceof ICacheableEntityDeserializer))
+                ((ICacheableEntityDeserializer)deserializer).clearQueryCaching(queryProcessContext.getQueryId());
         }
         
     }
