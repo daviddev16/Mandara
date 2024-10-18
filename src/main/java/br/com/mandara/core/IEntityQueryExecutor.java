@@ -12,7 +12,7 @@ public interface IEntityQueryExecutor {
     public static IEntityQueryExecutor getImplementation(IEntityManager entityManager, Connection connection) {
         return new EntityQueryExecutorImpl(entityManager, connection);
     }
-    
+        
     <T> IDQLQuery<T> executeSelectQuery(String sql, Class<? super T> entityClassType) throws SQLException;
     
     <T> IDQLQuery<T> executeSelectQuery(String sql, Class<? super T> entityClassType, IEntityDeserializer deserializer) throws SQLException;
@@ -27,31 +27,10 @@ public interface IEntityQueryExecutor {
     
     <T> IDMLQuery<T> executeDeleteQuery(T entityObject) throws SQLException;
 
-    IEntityDeserializer getEntityDeserializer();
-    
     IEntityManager getEntityManager();
 
-    Connection getConnection();
-    
-    
-/*  <T, IdT> T queryEntityById(IdT id, Class<? super T> entityClassType, IEntityDeserializer<T> deserializer);
+    IEntityDeserializer getEntityDeserializer();
 
-    <T> List<T> queryAllEntities(Class<? super T> entityClassType, IEntityDeserializer<T> deserializer);
-    
-    <T> List<T> queryEntitiesBySql(String sql, Class<? super T> entityClassType, IEntityDeserializer<T> deserializer);
-    
-    <T> T querySingleEntityBySql(String sql, Class<? super T> entityClassType, IEntityDeserializer<T> deserializer);
-    
-    <T> T createEntityReturning(T entity, IEntityDeserializer<T> deserializer);
-    
-    <T> void createEntity(T entity);
-    
-    <T> T updateEntityReturning(T entity, IEntityDeserializer<T> deserializer);
-    
-    <T> void updateEntity(T entity);
-    
-    <T, IdT> void deleteEntityById(IdT id, Class<T> entityClassType);
-    
-    <T> void deleteEntity(T entity);*/
-    
+    Connection getConnection();
+
 }

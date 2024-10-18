@@ -83,18 +83,18 @@ public class SelectQueryProcessor<T> extends AbstractQueryProcessor<T> implement
                     .clearQueryCaching(queryProcessContext.getQueryId());
         }
     }
+
+    @Override
+    public T getSingleEntity() throws QueryProcessorException {
+        List<T> dataSet0 = getDataSet();
+        return dataSet0.isEmpty() ? null : dataSet0.get(0);
+    }
     
     @Override
     public List<T> getDataSet() throws QueryProcessorException {
         if (dataSet == null) 
             processQuery();
-
         return (List<T>) dataSet;
-    }
-
-    @Override
-    public T getSingleEntity() {
-        throw new UnsupportedOperationException("getSingleEntity() not implemented yet.");
     }
 
     private T deserializeSingleInternal(

@@ -103,7 +103,7 @@ public final class EntityMetadata {
             }
             return null;
         }
-
+        
         public Field getCompoundedIdentificationField() {
             return compoundedIdentificationField;
         }

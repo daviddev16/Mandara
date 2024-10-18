@@ -8,6 +8,6 @@ public interface IDQLQuery<T> extends IQuery {
 
     List<T> getDataSet() throws QueryProcessorException;
 
-    T getSingleEntity();
+    T getSingleEntity() throws QueryProcessorException;
     
 }
